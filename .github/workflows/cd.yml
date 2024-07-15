@@ -12,4 +12,3 @@ jobs:
     - name: Get Github Actions IP
       id: ip
       uses: haythem/public-ip@v1.2
-  
