@@ -1,4 +1,4 @@
-name: CD (Continous Deploy)
+name: CD (Continuous Deploy)
 
 on:
   repository_dispatch:
@@ -16,7 +16,7 @@ jobs:
     - name: Configure AWS IAM Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACEESS_KEY_ID }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ap-northeast-2
 
@@ -33,7 +33,7 @@ jobs:
       run: |
         npm ci --legacy-peer-deps
 
-    - name: Create .env.production for Continous Deploy
+    - name: Create .env.production for Continuous Deploy
       run: |
         echo "${{ secrets.ENV_PRODUCTION }}" > .env.production
         cat .env.production
@@ -54,17 +54,17 @@ jobs:
         username: ec2-user
         key: ${{ secrets.PRIVATE_KEY }}
         source: "./build/*"
-        target: "/home/ec2-user/lms/actions-frontend"
+        target: "/home/ec2-user/text-farmer/actions-frontend"
 
     - name: Remove Github Actions IP From Security Group
       run: |
         aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
 
   deploy:
-    name: Deply to Production
+    name: Deploy to Production
     needs: build
-    runs-on: [ self-hosted, deploy-text-farmer-frontend]
+    runs-on: [ self-hosted, deploy-text-farmer-frontend ]
     steps:
       - name: Deploy to Production
         run: |
-          echo "read for deploy"
+          echo "ready for deploy"
