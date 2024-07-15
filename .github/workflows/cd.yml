@@ -1,4 +1,4 @@
-name: CD (Continous Deploy)
+name: CD (Continuous Deploy)
 
 on:
   repository_dispatch:
