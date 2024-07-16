@@ -29,7 +29,7 @@ jobs:
         node-version: '20'
 
     - name: Install Dependencies
-      if: steps:cache.outputs.cache-hit != 'true'
+      if: steps.cache.outputs.cache-hit != 'true'
       run: |
         npm ci --legacy-peer-deps
 
@@ -43,10 +43,10 @@ jobs:
         npm run build
         ls
 
-     - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.5.0
-        with:
-          ssh-private-key: ${{ secrets.PRIVATE_KEY }}
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.5.0
+      with:
+        ssh-private-key: ${{ secrets.PRIVATE_KEY }}
 
     - name: Add Github Actions IP to Security Group
       run: |
@@ -59,22 +59,22 @@ jobs:
         username: ec2-user
         key: ${{ secrets.PRIVATE_KEY }}
         source: "./dist/*"
-        target: "/home/ec2-user/text-farmer/actions-frontend"
+        target: "/home/ec2-user/tcp/actions-frontend"
 
     - name: Remove Github Actions IP From Security Group
       run: |
         aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
 
     - name: SSH Agent Cleanup
-          if: ${{ always() }}
-          uses: webfactory/ssh-agent@v0.5.0
-          with:
-            ssh-private-key: ${{ secrets.PRIVATE_KEY }}
-
+      if: ${{ always() }}
+      uses: webfactory/ssh-agent@v0.5.0
+      with:
+        ssh-private-key: ${{ secrets.PRIVATE_KEY }}
+  
   deploy:
     name: Deploy to Production
     needs: build
-    runs-on: [ self-hosted, deploy-text-farmer-frontend ]
+    runs-on: [ self-hosted, deploy-tcp-frontend ]
     steps:
       - name: Deploy to Production
         run: |
