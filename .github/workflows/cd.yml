@@ -59,7 +59,7 @@ jobs:
         username: ec2-user
         key: ${{ secrets.PRIVATE_KEY }}
         source: "./dist/*"
-        target: "/home/ec2-user/tcp/actions-frontend"
+        target: "/home/ec2-user/text-farmer/actions-frontend"
 
     - name: Remove Github Actions IP From Security Group
       run: |
@@ -74,7 +74,7 @@ jobs:
   deploy:
     name: Deploy to Production
     needs: build
-    runs-on: [ self-hosted, deploy-tcp-frontend ]
+    runs-on: [ self-hosted, deploy-text-farmer-frontend ]
     steps:
       - name: Deploy to Production
         run: |
